@@ -12,10 +12,15 @@ namespace Task1.Library
         {
             if (m1.Size != m2.Size)
                 throw new InvalidOperationException("Can't add matrixes of different sizes.");
-            MethodInfo addition = m1.GetType().GetMethod("op_Addition", BindingFlags.Static | BindingFlags.Public);
-            if (addition == null)
-                throw new InvalidOperationException("Can't add matrixes of type that doesn't define addition operation.");
-            return Add<T>(m1, m2, GetAddition<T>());
+            try
+            {
+                Func<T, T, T> addition = GetAddition<T>();
+                return Add<T>(m1, m2, addition);
+            }
+            catch(InvalidOperationException e)
+            {
+                throw e;
+            }
         }
 
         public static SquareMartix<T> Add<T>(this ISquareMatrix<T> m1, ISquareMatrix<T> m2, Func<T, T, T> addition)
@@ -33,7 +38,7 @@ namespace Task1.Library
             return result;
         }
 
-        public static Func<T, T, T> GetAddition<T>()
+        private static Func<T, T, T> GetAddition<T>()
         {
             var paramA = Expression.Parameter(typeof(T), "a");
             var paramB = Expression.Parameter(typeof(T), "b");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,34 +7,19 @@ using System.Threading.Tasks;
 
 namespace Task1.Library
 {
-    class DiagonalMatrix<T>: ISquareMatrix<T>
+    public class DiagonalMatrix<T> : Matrix<T>, ISquareMatrix<T>, IEquatable<DiagonalMatrix<T>>
     {
         private T[] elements;
-
-        public event EventHandler<ElementChangedEventArgs> ElementChanged;
         public int Size { get; private set; }
-        public T this[int i, int j]
+        public DiagonalMatrix(T[][] matrix)
         {
-            get
-            {
-                if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
-                    throw new ArgumentOutOfRangeException();
-                if (i == j)
-                    return elements[i];
-                else
-                    return default(T);
-            }
-            set
-            {
-                if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
-                    throw new ArgumentOutOfRangeException();
-                if (i == j)
-                    elements[i] = value;
-                else if (!value.Equals(default(T)))
-                    throw new ArgumentOutOfRangeException();
-            }
+            if (matrix == null)
+                throw new ArgumentNullException();
+            Size = matrix.Length;
+            elements = new T[Size];
+            for (int i = 0; i < Size; i++)
+                elements[i] = matrix[i][i];
         }
-
         public DiagonalMatrix(int size)
         {
             if (size < 0)
@@ -42,9 +28,48 @@ namespace Task1.Library
             elements = new T[size];
         }
 
-        protected virtual void OnElementChanged(object sender, ElementChangedEventArgs e)
+        public bool Equals(DiagonalMatrix<T> other)
         {
-            ElementChanged(sender, e);
+            if (ReferenceEquals(other, null))
+                return false;
+            if (ReferenceEquals(other, this))
+                return true;
+            if (Size != other.Size)
+                return false;
+            return ((IStructuralEquatable)elements).Equals(other.elements, StructuralComparisons.StructuralEqualityComparer);          
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(obj, null))
+                return false;
+            if (ReferenceEquals(obj, this))
+                return true;
+            DiagonalMatrix<T> m = obj as DiagonalMatrix<T>;
+            if (m == null)
+                return false;
+            else
+                return this.Equals(m);
+        }
+
+        protected override T GetElement(int i, int j)
+        {
+            if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
+                throw new ArgumentOutOfRangeException();
+            if (i == j)
+                return elements[i];
+            else
+                return default(T);
+        }
+
+        protected override void SetElement(int i, int j, T value)
+        {
+            if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
+                throw new ArgumentOutOfRangeException();
+            if (i == j)
+                elements[i] = value;
+            else if (!value.Equals(default(T)))
+                throw new ArgumentOutOfRangeException();
         }
     }
 }

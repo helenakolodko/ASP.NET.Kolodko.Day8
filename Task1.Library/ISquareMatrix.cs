@@ -8,7 +8,6 @@ namespace Task1.Library
 {
     public interface ISquareMatrix<T>
     {
-        event EventHandler<ElementChangedEventArgs> ElementChanged;
         int Size { get; }
         T this[int i, int j] { get; set; }
     }
