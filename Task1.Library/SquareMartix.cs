@@ -4,10 +4,9 @@ using System.Collections;
 
 namespace Task1.Library
 {
-    public class SquareMartix<T> : Matrix<T>, ISquareMatrix<T>, IEquatable<SquareMartix<T>>
+    public class SquareMartix<T> : Matrix<T>, IEquatable<SquareMartix<T>>
     {
         private T[][] elements;
-        public int Size { get; private set; }
         public SquareMartix(T[][] matrix)
         {
             if(matrix == null)
@@ -54,15 +53,11 @@ namespace Task1.Library
 
         protected override T GetElement(int i, int j)
         {
-            if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
-                throw new ArgumentOutOfRangeException();
             return elements[i][j];
         }
 
         protected override void SetElement(int i, int j, T value)
         {
-            if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
-                throw new ArgumentOutOfRangeException();
             elements[i][j] = value;
         }
         private void InitElements(int size)

@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Task1.Library
 {
-    public class SymmetricMatrix<T>: Matrix<T>, ISquareMatrix<T>, IEquatable<SymmetricMatrix<T>>
+    public class SymmetricMatrix<T>: Matrix<T>, IEquatable<SymmetricMatrix<T>>
     {
         private T[][] elements;
-        public int Size { get; private set; }
 
         public SymmetricMatrix(T[][] matrix)
         {
@@ -47,7 +46,7 @@ namespace Task1.Library
                 return false;
             if (ReferenceEquals(obj, this))
                 return true;
-            SquareMartix<T> m = obj as SquareMartix<T>;
+            SymmetricMatrix<T> m = obj as SymmetricMatrix<T>;
             if (m == null)
                 return false;
             else
@@ -56,8 +55,6 @@ namespace Task1.Library
 
         protected override T GetElement(int i, int j)
         {
-            if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
-                throw new ArgumentOutOfRangeException();
             if (i < j)
                 return elements[j][i];
             return elements[i][j];
@@ -65,12 +62,12 @@ namespace Task1.Library
 
         protected override void SetElement(int i, int j, T value)
         {
-            if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
-                throw new ArgumentOutOfRangeException();
-            elements[i][j] = value;
+            if (i > j)
+                elements[i][j] = value;
+            else
+                elements[j][i] = value;
             if (i != j)
             {
-                elements[j][i] = value;
                 OnElementChanged(this, new ElementChangedEventArgs(j, i));
             }
         }

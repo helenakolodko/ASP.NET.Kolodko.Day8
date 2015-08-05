@@ -7,10 +7,9 @@ using System.Threading.Tasks;
 
 namespace Task1.Library
 {
-    public class DiagonalMatrix<T> : Matrix<T>, ISquareMatrix<T>, IEquatable<DiagonalMatrix<T>>
+    public class DiagonalMatrix<T> : Matrix<T>, IEquatable<DiagonalMatrix<T>>
     {
         private T[] elements;
-        public int Size { get; private set; }
         public DiagonalMatrix(T[][] matrix)
         {
             if (matrix == null)
@@ -54,8 +53,6 @@ namespace Task1.Library
 
         protected override T GetElement(int i, int j)
         {
-            if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
-                throw new ArgumentOutOfRangeException();
             if (i == j)
                 return elements[i];
             else
@@ -64,8 +61,6 @@ namespace Task1.Library
 
         protected override void SetElement(int i, int j, T value)
         {
-            if (i < 0 || i > Size - 1 || j < 0 || j > Size - 1)
-                throw new ArgumentOutOfRangeException();
             if (i == j)
                 elements[i] = value;
             else if (!value.Equals(default(T)))
